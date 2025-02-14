@@ -11,12 +11,18 @@ const Home = () => {
           <div className="col-md-8">
             <br /><br /><br /><br />
             <h1 className="display-4">
-              Manage your Claims with Ease
+              <strong>AI Claims Management System </strong> 
               <br />
-              A seamless way to track and process claims
+              {/* Fast, Accurate, and Easy Claim Processing */}
             </h1>
-            <p className="lead">
+            {/* <p className="lead">
               Create, manage, and track your claims in real-time from any device.
+            </p> */}
+            <p className="lead">
+              <h2>Fast, Accurate, and Easy Claim Processing</h2>
+            </p>
+            <p className="lead">
+              Experience the future of claims management with our AI-powered system that makes processing faster and easier than ever.
             </p>
             <br />
             <form action="/policies" method="get">
