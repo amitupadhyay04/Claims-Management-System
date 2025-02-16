@@ -1,55 +1,45 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
 const MyPolicies = () => {
   const [policies, setPolicies] = useState([]);
-  const [error, setError] = useState("");
-  const [claimError, setClaimError] = useState("");
-  const [email, setEmail] = useState(""); // Add a state for email
-  const navigate = useNavigate(); // Initialize the navigate function
+  const [email, setEmail] = useState(""); // State for email
+  const navigate = useNavigate();
 
-  // Fetch policies and claims
   useEffect(() => {
     const fetchMyPoliciesAndClaims = async () => {
       try {
         const token = localStorage.getItem("token");
         const userData = localStorage.getItem("user");
         const user = userData ? JSON.parse(userData) : null;
-        
-        if (!user) {
-          setError("User data not found.");
-          return;
-        }
 
-        const userEmail = user.email; // Extract email from user object
-        setEmail(userEmail); // Set email in state
+        if (!user) return;
 
-        // Fetch user policies
+        const userEmail = user.email;
+        setEmail(userEmail);
+
         const policiesResponse = await axios.post(
           `${apiUrl}/api/policies/my-policies`,
           { email: userEmail },
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
-        // Set policies
-        setPolicies(policiesResponse.data);
-
+        // If response is empty, set policies to an empty array
+        setPolicies(policiesResponse.data || []);
       } catch (err) {
-        setError("Failed to load your policies.");
+        console.error("Error fetching policies:", err);
       }
     };
 
     fetchMyPoliciesAndClaims();
-  }, []); // Empty dependency array, runs once when the component mounts
+  }, []);
 
   return (
     <div className="container mt-4">
       <h2 className="mb-3">My Policies</h2>
-      {error && <p className="text-danger">{error}</p>}
-      {claimError && <p className="text-danger">{claimError}</p>}
       {policies.length === 0 ? (
         <p>You have not enrolled in any policies.</p>
       ) : (
@@ -71,7 +61,7 @@ const MyPolicies = () => {
                 <td>
                   <button
                     className="btn btn-primary"
-                    onClick={() => navigate(`/submit-claim/${policy._id}/${email}`)} // Redirect to SubmitClaim page with policyId and email
+                    onClick={() => navigate(`/submit-claim/${policy._id}/${email}`)}
                   >
                     Submit Claim
                   </button>

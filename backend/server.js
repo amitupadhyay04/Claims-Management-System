@@ -16,6 +16,12 @@ const emailRoutes = require("./routes/emailRoutes")
 const app = express();
 app.use(express.json());
 app.use(cors());
+const promBundle = require('express-prom-bundle');
+
+const metricsMiddleware = promBundle({ includeMethod: true });
+console.log("✅ Prometheus metrics middleware loaded!"); // <-- Add this
+app.use(metricsMiddleware);
+
 app.use("/api/auth", authRoutes);
 
 // Swagger configuration
@@ -50,8 +56,11 @@ const swaggerOptions = {
   apis: ["./routes/*.js"], // Path to your route files
 };
 
-const swaggerSpec = swaggerJsDoc(swaggerOptions);
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: "OK" });
+});
 
+const swaggerSpec = swaggerJsDoc(swaggerOptions);
 
 
 // Connect to MongoDB

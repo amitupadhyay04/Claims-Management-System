@@ -10,6 +10,8 @@ lerna-debug.log*
 
 /frontend/node_modules
 /frontend/.env
+/frontend/cypress
+/frontend/cypress.config.js
 /backend/node_modules
 /backend/config
 dist

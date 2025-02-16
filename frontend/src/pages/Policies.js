@@ -76,6 +76,30 @@ const Policies = () => {
       }
     }
   };
+  const handleDeletePolicy = async (policyId) => {
+    if (!window.confirm("Are you sure you want to delete this Policy?")) return;
+  
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Unauthorized. Please login.");
+        return;
+      }
+  
+      await axios.delete(`${apiUrl}/api/policies/${policyId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+  
+      alert("Policy deleted successfully!");
+      // Refresh policies after deletion
+      setPolicies((prevPolicies) =>
+        prevPolicies.filter((policy) => policy._id !== policyId)
+      );
+    } catch (error) {
+      console.error("Error deleting policy:", error);
+      alert(error.response?.data?.message || "Error deleting policy.");
+    }
+  };
   
 
   return (
@@ -116,6 +140,15 @@ const Policies = () => {
                         Take Policy
                       </button>
                     )}
+                    {role === "admin" && (
+                      <button
+                        className="btn btn-danger ms-2"
+                        onClick={() => handleDeletePolicy(policy._id)}
+                      >
+                        Delete Policy
+                      </button>
+                    )}
+
               </div>
             </div>
           </div>

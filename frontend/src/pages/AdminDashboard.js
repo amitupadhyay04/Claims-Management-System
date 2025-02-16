@@ -79,18 +79,20 @@ const AdminDashboard = () => {
         <thead>
           <tr>
             <th>Policy Name</th>
+            <th>Policyholder Eamil</th>
             <th>Document</th>
             <th>Amount</th>
             <th>Status</th>
             <th>Actions</th>
             <th>Reason</th>
-            <th>Scanned Data</th>
+            <th>Analyzed Data</th>
           </tr>
         </thead>
         <tbody>
           {claims.map((claim) => (
             <tr key={claim._id}>
               <td>{claim.policyId ? claim.policyId.name : "Unknown Policy"}</td>
+              <td>{claim.policyholderEmail}</td>
               <td>
                 <a href={claim.documentUrl} target="_blank" rel="noopener noreferrer">
                   {shortenUrl(claim.documentUrl)}
@@ -129,7 +131,7 @@ const AdminDashboard = () => {
 
       <Modal show={showModal} onHide={handleCloseModal} size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>Scanned Data</Modal.Title>
+          <Modal.Title>Analyzed Data</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {selectedClaim?.scannedData ? (
@@ -146,7 +148,7 @@ const AdminDashboard = () => {
               ))}
             </div>
           ) : (
-            <span>No scanned data available</span>
+            <span>No Analyzed data available</span>
           )}
         </Modal.Body>
         <Modal.Footer>

@@ -99,6 +99,31 @@ router.post("/my-policies", async (req, res) => {
   }
 });
 
+// @route   DELETE /api/policies/:id
+// @desc    Delete a policy (Admin Only)
+// @access  Private (Admin - Handled by API Gateway)
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Check if the policy exists
+    const policy = await Policy.findById(id);
+    if (!policy) {
+      return res.status(404).json({ message: "Policy not found" });
+    }
+
+    // Remove the policy reference from policyholders
+    await Policyholder.deleteMany({ policyId: id });
+
+    // Delete the policy itself
+    await Policy.findByIdAndDelete(id);
+
+    res.json({ message: "Policy deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting policy:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 
 module.exports = router;
